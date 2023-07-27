@@ -8,7 +8,7 @@ export default function Home() {
 
   const { registerUser } = useContext(AppContext);
 
-  const handleLogin = (e) => {
+  const handleRegister = (e) => {
     e.preventDefault();
     registerUser(fullname, email, password);
   };
@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <section className="my-20 flex items-center justify-center">
       <form
-        onSubmit={handleLogin}
+        onSubmit={handleRegister}
         className="block w-full max-w-lg border border-black rounded-lg py-6 px-4"
       >
         <div className="mb-6">
