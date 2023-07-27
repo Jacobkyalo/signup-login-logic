@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { AppContext } from "../contexts/AppContext";
+import { AppContext } from "../contexts/appContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
