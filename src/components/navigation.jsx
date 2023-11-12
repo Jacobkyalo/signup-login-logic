@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { AppContext } from "../contexts/appContext";
 
 export default function Navigation() {
-  const { user, parsedUser, logoutUser } = useContext(AppContext);
+  const { user, logoutUser } = useContext(AppContext);
 
   const location = useLocation();
 
@@ -17,15 +17,28 @@ export default function Navigation() {
         </Link>
         <nav>
           <ul className="flex items-center gap-x-4">
-            <li>
-              <Link to="/login">
-                {location.pathname === "/" ? (
-                  <> {user ? `${parsedUser?.fullname}` : "Login"}</>
-                ) : (
-                  ""
-                )}
-              </Link>
-            </li>
+            {!user ? (
+              <>
+                <li>
+                  <Link to="/register">Register</Link>
+                </li>
+                <li>
+                  <Link to="/login">Login</Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/">Shop</Link>
+                </li>
+                <li>
+                  <Link to="/cart">Cart</Link>
+                </li>
+                <li>
+                  <Link to="/profile">Profile</Link>
+                </li>
+              </>
+            )}
             {location.pathname === "/profile" ? (
               <li>
                 <button
