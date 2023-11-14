@@ -11,8 +11,8 @@ export default function Navigation() {
     <>
       <header className="py-4 flex items-center justify-between">
         <Link to="/">
-          <h1 className="text-2xl sm:text-3xl text-black font-semibold">
-            Signup Login Logic
+          <h1 className="text-2xl sm:text-3xl text-black font-bold">
+            Simple Shop
           </h1>
         </Link>
         <nav>
