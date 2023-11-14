@@ -36,7 +36,7 @@ export default function AppContextProvider({ children }) {
       return;
     } else {
       console.log(email, password);
-      navigate("/profile");
+      navigate("/");
     }
   };
 

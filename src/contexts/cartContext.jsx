@@ -35,8 +35,17 @@ export default function CartContextProvider({ children }) {
   // add to cart
   const addToCart = (pdt) => {
     setCart([...cart, pdt]);
+    alert(`${pdt.title} added to cart`);
   };
 
-  const values = { products, product, cart, addToCart };
+  // remove from cart
+  const removeFromCart = (pdtId, pdt) => {
+    const productsRemained = cart.filter((c) => c.id !== pdtId);
+    setCart(productsRemained);
+    alert(`${pdt.title} removed from cart`);
+  };
+
+  const values = { products, product, cart, addToCart, removeFromCart };
+
   return <CartContext.Provider value={values}>{children}</CartContext.Provider>;
 }
