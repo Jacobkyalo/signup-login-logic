@@ -1,22 +1,35 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { AppContext } from "../contexts/appContext";
 
 export default function Home() {
-  const [fullname, setFullname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const { registerUser } = useContext(AppContext);
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    registerUser(fullname, email, password);
+  const schema = yup.object().shape({
+    fullname: yup.string().required(),
+    email: yup.string().email().required(),
+    password: yup.string().min(8).max(12).required(),
+    confirmPassword: yup.string().oneOf([yup.ref("password"), null]),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const handleRegister = (data) => {
+    registerUser(data.fullname, data.email, data.password);
   };
 
   return (
     <section className="my-20 flex items-center justify-center">
       <form
-        onSubmit={handleRegister}
+        onSubmit={handleSubmit(handleRegister)}
         className="block w-full max-w-lg border border-black rounded-lg py-6 px-4"
       >
         <div className="mb-6">
@@ -31,10 +44,12 @@ export default function Home() {
               id="fullname"
               className="block border border-black rounded-md py-3 px-4 w-full outline-0"
               placeholder="e.g. John Doe"
-              required
-              value={fullname}
-              onChange={(e) => setFullname(e.target.value)}
+              name="fullname"
+              {...register("fullname")}
             />
+            <p className="text-sm mt-1 first-letter:capitalize text-red-600">
+              {errors.fullname?.message}
+            </p>
           </label>
         </div>
         <div className="mb-3">
@@ -45,10 +60,12 @@ export default function Home() {
               id="email"
               className="block border border-black rounded-md py-3 px-4 w-full outline-0"
               placeholder="e.g. johndoe@gmail.com"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              {...register("email")}
             />
+            <p className="text-sm mt-1 first-letter:capitalize text-red-600">
+              {errors.email?.message}
+            </p>
           </label>
         </div>
         <div className="mb-3">
@@ -59,13 +76,30 @@ export default function Home() {
               id="password"
               className="block border border-black rounded-md py-3 px-4 w-full outline-0 "
               placeholder="your password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              {...register("password")}
             />
+            <p className="text-sm mt-1 first-letter:capitalize text-red-600">
+              {errors.password?.message}
+            </p>
           </label>
         </div>
-
+        <div className="mb-3">
+          <label htmlFor="confirmPassword">
+            <span className="mb-2 text-lg block">Confirm password</span>
+            <input
+              type="password"
+              id="confirmPassword"
+              className="block border border-black rounded-md py-3 px-4 w-full outline-0 "
+              placeholder="confirm your password"
+              name="confirmPassword"
+              {...register("confirmPassword")}
+            />
+            <p className="text-sm mt-1 first-letter:capitalize text-red-600">
+              {errors.confirmPassword && "Passwords must match"}
+            </p>
+          </label>
+        </div>
         <button
           type="submit"
           className="rounded-md bg-black text-base text-white px-6 py-3 w-full my-6"

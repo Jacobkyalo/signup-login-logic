@@ -1,21 +1,31 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { AppContext } from "../contexts/appContext";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const { loginUser } = useContext(AppContext);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    loginUser(email, password);
+  const schema = yup.object().shape({
+    email: yup.string().email().required(),
+    password: yup.string().min(8).max(12).required(),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
+
+  const handleLogin = (data) => {
+    loginUser(data.email, data.password);
   };
 
   return (
     <section className="my-20 flex items-center justify-center">
       <form
-        onSubmit={handleLogin}
+        onSubmit={handleSubmit(handleLogin)}
         className="block w-full max-w-lg border border-black rounded-lg py-6 px-4"
       >
         <div className="mb-6">
@@ -31,10 +41,12 @@ export default function Login() {
               id="email"
               className="block border border-black rounded-md py-3 px-4 w-full outline-0"
               placeholder="e.g. johndoe@gmail.com"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              {...register("email")}
             />
+            <p className="text-sm mt-1 first-letter:capitalize text-red-600">
+              {errors.email?.message}
+            </p>
           </label>
         </div>
         <div className="mb-3">
@@ -45,10 +57,12 @@ export default function Login() {
               id="password"
               className="block border border-black rounded-md py-3 px-4 w-full outline-0 "
               placeholder="your password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              {...register("password")}
             />
+            <p className="text-sm mt-1 first-letter:capitalize text-red-600">
+              {errors.password?.message}
+            </p>
           </label>
         </div>
 
